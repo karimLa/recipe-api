@@ -1,17 +1,17 @@
-FROM python:3.7-alpine
+FROM python:3.8.3-alpine
 
 LABEL maintainer="Soramon0" version="1.0"
 
 ENV PYTHONUNBUFFERED 1
 
-COPY ./requirement.txt ./requirement.txt
+WORKDIR /app
+COPY requirement.txt requirement.txt
+
 RUN apk add --update --no-cache postgresql-client
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
     gcc libc-dev linux-headers postgresql-dev
-RUN pip install -r /requirement.txt
-RUN apk del .tmp-build-deps
+RUN pip install -r requirement.txt && apk del .tmp-build-deps
 
-WORKDIR /app
 COPY ./app /app
 
 RUN adduser -D user
